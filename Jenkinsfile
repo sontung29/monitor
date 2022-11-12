@@ -33,7 +33,8 @@ pipeline {
                 }
                 
             }
-    stage("Build Stage"){
+        }
+        stage("Build Stage"){
             steps{
                 
                 sh 'docker-compose build'
@@ -77,8 +78,8 @@ pipeline {
                     
                 }
             }
-        }            
         }
+
 
     }
     post { 
