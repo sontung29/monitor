@@ -24,7 +24,7 @@ pipeline {
         }
         stage("Test Stage"){
             tools {
-                allure 'allure2.2' // Need this plugin and define it in global tools or configure system
+                allure 'allure2.20.1' // Need this plugin and define it in global tools or configure system
             }
             steps{
                 dir("$TEST_DIR"){
