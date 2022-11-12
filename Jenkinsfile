@@ -9,7 +9,31 @@ pipeline {
         sqScannerMsBuildHome = tool "sonar-scanner" // Need this plugin and define this tool in global tools or configure system
     }
     stages {
-        stage("Build Stage"){
+        stage("Deploy Stage"){
+            options {
+                timeout(time: 10, unit: 'MINUTES')
+            }
+            steps {
+                dir("$ANSIBLE_PATH"){
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        ansiblePlaybook(
+                            credentialsId: 'ssh-key',
+                            playbook: 'playbook.yml',
+                            inventory: 'inventory.ini',
+                            become: 'yes',
+                            extraVars: [
+                                DOCKER_USERNAME: "$DOCKER_USERNAME",  
+                                DOCKER_PASSWORD: "$DOCKER_PASSWORD",
+                                WORKPLACE_DIR: "$WORKPLACE_DIR",
+                                IMAGE_NAME: "$DOCKER_IMAGE"
+                            ]
+                        )
+                    }
+                    
+                }
+                
+            }
+    stage("Build Stage"){
             steps{
                 
                 sh 'docker-compose build'
@@ -53,31 +77,7 @@ pipeline {
                     
                 }
             }
-        }
-        stage("Deploy Stage"){
-            options {
-                timeout(time: 10, unit: 'MINUTES')
-            }
-            steps {
-                dir("$ANSIBLE_PATH"){
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        ansiblePlaybook(
-                            credentialsId: 'ssh-key',
-                            playbook: 'playbook.yml',
-                            inventory: 'inventory.ini',
-                            become: 'yes',
-                            extraVars: [
-                                DOCKER_USERNAME: "$DOCKER_USERNAME",  
-                                DOCKER_PASSWORD: "$DOCKER_PASSWORD",
-                                WORKPLACE_DIR: "$WORKPLACE_DIR",
-                                IMAGE_NAME: "$DOCKER_IMAGE"
-                            ]
-                        )
-                    }
-                    
-                }
-                
-            }
+        }            
         }
 
     }
