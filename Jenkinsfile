@@ -18,8 +18,8 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         ansiblePlaybook(
                             credentialsId: 'ssh-key',
-                            playbook: 'ansible/playbook.yml',
-                            inventory: 'ansuble/inventory.ini',
+                            playbook: 'playbook.yml',
+                            inventory: 'inventory.ini',
                             become: 'yes',
                             extraVars: [
                                 DOCKER_USERNAME: "$DOCKER_USERNAME",  
