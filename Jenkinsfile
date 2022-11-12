@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'slave2' // choose slave to build
-    }
+    agent any
     environment{
         WORKPLACE_DIR="/var/lib/jenkins/workspace/webapi"
         TEST_DIR="/var/lib/jenkins/workspace/webapi/unittest"
